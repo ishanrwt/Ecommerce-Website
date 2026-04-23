@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import Header from '../../components/Header';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import ROUTES from '../../navigations/Routes';
+import { apiUrl } from '../../config/api';
 
 function Login() {
   const [form, setForm] = useState({
@@ -13,6 +14,9 @@ function Login() {
     email: "",
     password: "",
   });
+  const [searchParams] = useSearchParams();
+  const initialPortal = searchParams.get("portal") === "admin" ? "admin" : "user";
+  const [loginPortal, setLoginPortal] = useState(initialPortal);
   const navigate = useNavigate();
 
   
@@ -48,10 +52,21 @@ function Login() {
 
   function checkUser(){
     try {
-      axios.post("http://localhost:8081/login", form).then((d) => {
+      axios.post(apiUrl("/login"), form).then((d) => {
         localStorage.setItem("id",d.data.id)
         localStorage.setItem("role",d.data.role)
-        if(d.data.role=="admin"){
+        if (loginPortal === "admin" && d.data.role !== "admin") {
+          alert("This account is not an admin account.");
+          localStorage.clear();
+          return;
+        }
+        if (loginPortal === "user" && d.data.role === "admin") {
+          alert("Please use Admin Login for admin accounts.");
+          localStorage.clear();
+          return;
+        }
+
+        if(d.data.role==="admin"){
           navigate(ROUTES.universityAdmin.name)
         }
         else{
@@ -75,6 +90,23 @@ function Login() {
             Login
           </div>
           <div className="card-body">
+            <div className='mb-3'>
+              <p className='mb-2 fw-bold'>Choose Login Type</p>
+              <button
+                className={`btn me-2 ${loginPortal === "user" ? "btn-primary" : "btn-outline-primary"}`}
+                onClick={() => setLoginPortal("user")}
+                type='button'
+              >
+                User Login
+              </button>
+              <button
+                className={`btn ${loginPortal === "admin" ? "btn-dark" : "btn-outline-dark"}`}
+                onClick={() => setLoginPortal("admin")}
+                type='button'
+              >
+                Admin Login
+              </button>
+            </div>
             <div className='form-group row'>
               <label className='col-4'>Email</label>
               <div className='col-8'>
@@ -91,7 +123,9 @@ function Login() {
             </div>
           </div>
           <div className="card-footer text-muted bg-info">
-            <button className='btn btn-warning text-white' onClick={onUserSubmit}>Login</button>
+            <button className='btn btn-warning text-white' onClick={onUserSubmit}>
+              {loginPortal === "admin" ? "Login as Admin" : "Login as User"}
+            </button>
             <p className='text-white mt-2' style={{cursor:"pointer"}} onClick={()=>{navigate(ROUTES.register.name)}}>New User ?</p>
           </div>
         </div>

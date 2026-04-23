@@ -11,6 +11,7 @@ import { Login, Register } from "./controllers/User.js";
 dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 8081;
 app.use(express.json());
 app.use(cors());
 
@@ -86,8 +87,8 @@ app.use(express.static("uploadsPrd/"));
 
 mongoose.connect(process.env.DB_URL).then((d) => {
     console.log("Database Connection Successfull");
-    app.listen(process.env.PORT, () => {
-        console.log("Port connection Successfull at : " + process.env.PORT)
+    app.listen(PORT, () => {
+        console.log("Port connection Successfull at : " + PORT)
     })
 }).catch(() => {
     console.log("Database Connection Error")

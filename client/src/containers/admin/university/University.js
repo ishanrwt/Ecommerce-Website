@@ -206,6 +206,7 @@ import Header from '../../../components/Header';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ROUTES from '../../../navigations/Routes';
+import { apiUrl, assetUrl } from '../../../config/api';
 
 function University() {
   const [form, setForm] = useState({ name: "", image: null });
@@ -228,7 +229,7 @@ function University() {
       formData.append("name", form.name);
       formData.append("image", form.image, form.image.name);
 
-      axios.post("http://localhost:8081/university", formData, {
+      axios.post(apiUrl("/university"), formData, {
         headers: { "Content-Type": "multipart/form-data" }
       }).then((d) => {
         alert(d.data.message);
@@ -247,7 +248,7 @@ function University() {
       formData.append("name", form.name);
       formData.append("image", form.image, form.image.name);
 
-      axios.put("http://localhost:8081/university", formData, {
+      axios.put(apiUrl("/university"), formData, {
         headers: { "Content-Type": "multipart/form-data" }
       }).then((d) => {
         alert(d.data.message);
@@ -262,7 +263,7 @@ function University() {
   function DeleteUniversity(id) {
     if (!window.confirm('Want to delete this university?')) return;
 
-    axios.delete("http://localhost:8081/university", { data: { id } }).then((d) => {
+    axios.delete(apiUrl("/university"), { data: { id } }).then((d) => {
       alert(d.data.message);
       GetAll();
     }).catch(() => {
@@ -271,7 +272,7 @@ function University() {
   }
 
   function GetAll() {
-    axios.get("http://localhost:8081/university").then((d) => {
+    axios.get(apiUrl("/university")).then((d) => {
       setUniversities(d.data.univData);
     }).catch(() => {
       alert("Failed to Fetch Data");
@@ -305,7 +306,7 @@ function University() {
   function renderUniversities() {
     return universities.map((item) => (
       <tr key={item._id}>
-        <td><img style={{ width: "300px", height: "200px" }} src={`http://localhost:8081/${item.image}`} /></td>
+        <td><img style={{ width: "300px", height: "200px" }} src={assetUrl(item.image)} /></td>
         <td>{item.name}</td>
         <td>
           <button className='btn btn-primary' onClick={() => {

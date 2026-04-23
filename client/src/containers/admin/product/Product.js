@@ -263,6 +263,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '../../../components/Header';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { apiUrl, assetUrl } from '../../../config/api';
 
 function useQuery() {
   const { search } = useLocation();
@@ -288,7 +289,7 @@ function Product() {
   }, []);
 
   function getAll() {
-    axios.get("http://localhost:8081/product?departmentId=" + queryParam.get("id"))
+    axios.get(apiUrl(`/product?departmentId=${queryParam.get("id")}`))
       .then((res) => setProducts(res.data.prdData))
       .catch(() => alert("Failed to Fetch Products"));
   }
@@ -335,7 +336,7 @@ function Product() {
 
     if (productsId) {
       formData.append("id", productsId);
-      axios.put("http://localhost:8081/product", formData, {
+      axios.put(apiUrl("/product"), formData, {
         headers: { "Content-Type": "multipart/form-data" }
       }).then((res) => {
         alert(res.data.message);
@@ -343,7 +344,7 @@ function Product() {
         resetForm();
       }).catch(() => alert("Failed to Update Product"));
     } else {
-      axios.post("http://localhost:8081/product", formData, {
+      axios.post(apiUrl("/product"), formData, {
         headers: { "Content-Type": "multipart/form-data" }
       }).then((res) => {
         alert(res.data.message);
@@ -355,7 +356,7 @@ function Product() {
 
   function DeleteProduct(id) {
     if (!window.confirm("Sure you want to delete?")) return;
-    axios.delete("http://localhost:8081/product", { data: { id } })
+    axios.delete(apiUrl("/product"), { data: { id } })
       .then((res) => {
         alert(res.data.message);
         getAll();
@@ -365,7 +366,7 @@ function Product() {
   function renderProducts() {
     return products.map((item) => (
       <tr key={item._id}>
-        <td><img style={{ width: "300px", height: "200px" }} src={`http://localhost:8081/${item.images[0]}`} /></td>
+        <td><img style={{ width: "300px", height: "200px" }} src={assetUrl(item.images[0])} /></td>
         <td>{item.name}</td>
         <td>{item.description}</td>
         <td>{item.price}</td>

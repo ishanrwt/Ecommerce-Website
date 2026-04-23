@@ -66,6 +66,7 @@ import Header from '../../../components/Header';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ROUTES from '../../../navigations/Routes';
+import { apiUrl, assetUrl } from '../../../config/api';
 
 // Hook to access query string
 function useQuery() {
@@ -84,7 +85,7 @@ function UserProduct() {
 
   function GetAllProductsByDepartmentId() {
     axios
-      .get("http://localhost:8081/product?departmentId=" + queryParam.get("id"))
+      .get(apiUrl(`/product?departmentId=${queryParam.get("id")}`))
       .then((res) => {
         setProducts(res.data.prdData);
       })
@@ -97,7 +98,7 @@ function UserProduct() {
     return products?.map((item) => (
       <div key={item._id} className="product-card">
         <img
-          src={"http://localhost:8081/" + item.images[0]}
+          src={assetUrl(item.images[0])}
           alt={item.name}
           className="product-img"
         />

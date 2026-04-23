@@ -142,6 +142,7 @@
 // export default Cart;
 import React, { useEffect, useState } from 'react';
 import Header from '../../../components/Header';
+import { assetUrl } from '../../../config/api';
 
 function Cart() {
   const [cart, setCart] = useState([]);
@@ -180,7 +181,7 @@ function Cart() {
               {cart.map((item) => (
                 <div className="cart-card" key={item._id}>
                   <img
-                    src={`http://localhost:8081/${item.images?.[0]}`}
+                    src={assetUrl(item.images?.[0])}
                     alt={item.name}
                     className="cart-img"
                   />

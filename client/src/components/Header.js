@@ -146,7 +146,8 @@ function Header() {
     } else {
       return (
         <div>
-          <Link to={ROUTES.login.name} className="btn btn-outline-success my-2 my-sm-0 m-1">Login</Link>
+          <Link to={`${ROUTES.login.name}?portal=user`} className="btn btn-outline-success my-2 my-sm-0 m-1">User Login</Link>
+          <Link to={`${ROUTES.login.name}?portal=admin`} className="btn btn-outline-dark my-2 my-sm-0 m-1">Admin Login</Link>
           <Link to={ROUTES.register.name} className="btn btn-outline-success my-2 my-sm-0 m-1">Register</Link>
         </div>
       );

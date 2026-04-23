@@ -54,6 +54,7 @@ import Header from '../../../components/Header';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import ROUTES from '../../../navigations/Routes';
+import { apiUrl, assetUrl } from '../../../config/api';
 
 function Home() {
   const [universities, setUniversities] = useState([]);
@@ -65,7 +66,7 @@ function Home() {
   }, []);
 
   function GetAllUniversities() {
-    axios.get("http://localhost:8081/university")
+    axios.get(apiUrl("/university"))
       .then((res) => {
         setUniversities(res.data.univData || []);
         setLoading(false);
@@ -88,7 +89,7 @@ function Home() {
     return universities.map((item) => (
       <div className='col-md-4 mb-4' key={item._id}>
         <div className="card h-100">
-          <img className="card-img-top" src={"http://localhost:8081/" + item.image} alt={item.name} />
+          <img className="card-img-top" src={assetUrl(item.image)} alt={item.name} />
           <div className="card-body text-center">
             <h5 className="card-title">{item.name}</h5>
             <button className="btn btn-primary" onClick={() => {

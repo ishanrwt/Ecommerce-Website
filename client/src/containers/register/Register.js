@@ -3,6 +3,7 @@ import Header from '../../components/Header';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ROUTES from '../../navigations/Routes';
+import { apiUrl } from '../../config/api';
 
 function Register() {
   const [form, setForm] = useState({
@@ -23,7 +24,7 @@ function Register() {
 
   function saveUser() {
     try {
-      axios.post("http://localhost:8081/register", form).then((d) => {
+      axios.post(apiUrl("/register"), form).then((d) => {
         alert(d.data.message);
         navigate(ROUTES.login.name);
       });

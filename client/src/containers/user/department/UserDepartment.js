@@ -60,6 +60,7 @@ import Header from '../../../components/Header';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ROUTES from '../../../navigations/Routes';
+import { apiUrl, assetUrl } from '../../../config/api';
 
 // Hook to access query string
 function useQuery() {
@@ -78,7 +79,7 @@ function UserDepartment() {
 
   function GetAllDepartments() {
     axios
-      .get("http://localhost:8081/department?universityId=" + queryParam.get("id"))
+      .get(apiUrl(`/department?universityId=${queryParam.get("id")}`))
       .then((res) => {
         setDepartments(res.data.depData);
       })
@@ -91,7 +92,7 @@ function UserDepartment() {
     return departments?.map((item) => (
       <div key={item._id} className="department-card">
         <img
-          src={"http://localhost:8081/" + item.image}
+          src={assetUrl(item.image)}
           alt={item.name}
           className="department-img"
         />

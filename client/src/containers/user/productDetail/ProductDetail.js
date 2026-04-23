@@ -94,6 +94,7 @@ import Header from '../../../components/Header';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ROUTES from '../../../navigations/Routes';
+import { apiUrl, assetUrl } from '../../../config/api';
 
 // Hook to get query string
 function useQuery() {
@@ -112,7 +113,7 @@ function ProductDetail() {
 
   function GetProductDetail() {
     axios
-      .get("http://localhost:8081/productDetail?id=" + queryParam.get("id"))
+      .get(apiUrl(`/productDetail?id=${queryParam.get("id")}`))
       .then((res) => {
         setProduct(res.data.prdData);
       })
@@ -125,7 +126,7 @@ function ProductDetail() {
     return product?.images?.map((item, index) => (
       <img
         key={index}
-        src={"http://localhost:8081/" + item}
+        src={assetUrl(item)}
         alt="product"
         className="product-image"
       />
