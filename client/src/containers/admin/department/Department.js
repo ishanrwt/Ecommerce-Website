@@ -240,11 +240,12 @@ import { apiUrl, assetUrl } from '../../../config/api';
 
 function useQuery() {
   const { search } = useLocation();
-  return React.useMemo(() => new URLSearchParams(search), []);
+  return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 
 function Department() {
   const queryParam = useQuery();
+  const universityId = queryParam.get("id");
   const [form, setForm] = useState({ name: "", image: null, university: queryParam.get("id") });
   const [formError, setFormError] = useState({ name: "", image: "" });
   const [departments, setDepartments] = useState([]);
@@ -252,11 +253,13 @@ function Department() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    GetAll();
-  }, []);
+    axios.get(apiUrl(`/department?universityId=${universityId}`))
+      .then((res) => setDepartments(res.data.depData))
+      .catch(() => alert("Failed to Fetch Data"));
+  }, [universityId]);
 
   function GetAll() {
-    axios.get(apiUrl(`/department?universityId=${queryParam.get("id")}`))
+    axios.get(apiUrl(`/department?universityId=${universityId}`))
       .then((res) => setDepartments(res.data.depData))
       .catch(() => alert("Failed to Fetch Data"));
   }
@@ -265,7 +268,7 @@ function Department() {
     const formData = new FormData();
     formData.append("name", form.name);
     formData.append("image", form.image, form.image.name);
-    formData.append("universityId", queryParam.get("id"));
+    formData.append("universityId", universityId);
 
     axios.post(apiUrl("/department"), formData, {
       headers: { "Content-Type": "multipart/form-data" }
@@ -280,7 +283,7 @@ function Department() {
     const formData = new FormData();
     formData.append("name", form.name);
     formData.append("image", form.image, form.image.name);
-    formData.append("universityId", queryParam.get("id"));
+    formData.append("universityId", universityId);
     formData.append("id", departmentId);
 
     axios.put(apiUrl("/department"), formData, {
@@ -332,7 +335,7 @@ function Department() {
   function renderDepartments() {
     return departments.map((item) => (
       <tr key={item._id}>
-        <td><img style={{ width: "300px", height: "200px" }} src={assetUrl(item.image)} /></td>
+        <td><img style={{ width: "300px", height: "200px" }} src={assetUrl(item.image)} alt={item.name} /></td>
         <td>{item.name}</td>
         <td>
           <button className='btn btn-primary' onClick={() => {

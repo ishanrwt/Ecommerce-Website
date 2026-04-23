@@ -72,21 +72,18 @@ function UserDepartment() {
   const queryParam = useQuery();
   const navigate = useNavigate();
   const [departments, setDepartments] = useState([]);
+  const universityId = queryParam.get("id");
 
   useEffect(() => {
-    GetAllDepartments();
-  }, []);
-
-  function GetAllDepartments() {
     axios
-      .get(apiUrl(`/department?universityId=${queryParam.get("id")}`))
+      .get(apiUrl(`/department?universityId=${universityId}`))
       .then((res) => {
         setDepartments(res.data.depData);
       })
       .catch(() => {
         alert("Failed to Fetch Data");
       });
-  }
+  }, [universityId]);
 
   function RenderDepartments() {
     return departments?.map((item) => (

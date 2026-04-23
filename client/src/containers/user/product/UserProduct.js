@@ -78,21 +78,18 @@ function UserProduct() {
   const queryParam = useQuery();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const departmentId = queryParam.get("id");
 
   useEffect(() => {
-    GetAllProductsByDepartmentId();
-  }, []);
-
-  function GetAllProductsByDepartmentId() {
     axios
-      .get(apiUrl(`/product?departmentId=${queryParam.get("id")}`))
+      .get(apiUrl(`/product?departmentId=${departmentId}`))
       .then((res) => {
         setProducts(res.data.prdData);
       })
       .catch(() => {
         alert("Failed to Fetch Data");
       });
-  }
+  }, [departmentId]);
 
   function RenderProducts() {
     return products?.map((item) => (

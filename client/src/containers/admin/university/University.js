@@ -306,7 +306,7 @@ function University() {
   function renderUniversities() {
     return universities.map((item) => (
       <tr key={item._id}>
-        <td><img style={{ width: "300px", height: "200px" }} src={assetUrl(item.image)} /></td>
+        <td><img style={{ width: "300px", height: "200px" }} src={assetUrl(item.image)} alt={item.name} /></td>
         <td>{item.name}</td>
         <td>
           <button className='btn btn-primary' onClick={() => {

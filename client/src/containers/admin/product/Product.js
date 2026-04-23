@@ -267,17 +267,18 @@ import { apiUrl, assetUrl } from '../../../config/api';
 
 function useQuery() {
   const { search } = useLocation();
-  return React.useMemo(() => new URLSearchParams(search), []);
+  return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 
 function Product() {
   const queryParam = useQuery();
+  const departmentId = queryParam.get("id");
   const [products, setProducts] = useState([]);
   const [productsId, setProductsId] = useState(null);
   const [form, setForm] = useState({
     name: "",
     images: null,
-    departmentId: queryParam.get("id"),
+    departmentId,
     description: "",
     quantity: 10,
     price: 0
@@ -285,11 +286,13 @@ function Product() {
   const [formError, setFormError] = useState({});
 
   useEffect(() => {
-    getAll();
-  }, []);
+    axios.get(apiUrl(`/product?departmentId=${departmentId}`))
+      .then((res) => setProducts(res.data.prdData))
+      .catch(() => alert("Failed to Fetch Products"));
+  }, [departmentId]);
 
   function getAll() {
-    axios.get(apiUrl(`/product?departmentId=${queryParam.get("id")}`))
+    axios.get(apiUrl(`/product?departmentId=${departmentId}`))
       .then((res) => setProducts(res.data.prdData))
       .catch(() => alert("Failed to Fetch Products"));
   }
@@ -298,7 +301,7 @@ function Product() {
     setForm({
       name: "",
       images: null,
-      departmentId: queryParam.get("id"),
+      departmentId,
       description: "",
       quantity: "",
       price: ""
@@ -329,7 +332,7 @@ function Product() {
     }
 
     formData.append("name", form.name);
-    formData.append("departmentId", queryParam.get("id"));
+    formData.append("departmentId", departmentId);
     formData.append("description", form.description);
     formData.append("quantity", form.quantity);
     formData.append("price", form.price);
@@ -366,7 +369,7 @@ function Product() {
   function renderProducts() {
     return products.map((item) => (
       <tr key={item._id}>
-        <td><img style={{ width: "300px", height: "200px" }} src={assetUrl(item.images[0])} /></td>
+        <td><img style={{ width: "300px", height: "200px" }} src={assetUrl(item.images[0])} alt={item.name} /></td>
         <td>{item.name}</td>
         <td>{item.description}</td>
         <td>{item.price}</td>

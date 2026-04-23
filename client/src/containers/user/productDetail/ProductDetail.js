@@ -106,21 +106,18 @@ function ProductDetail() {
   const queryParam = useQuery();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
+  const productId = queryParam.get("id");
 
   useEffect(() => {
-    GetProductDetail();
-  }, []);
-
-  function GetProductDetail() {
     axios
-      .get(apiUrl(`/productDetail?id=${queryParam.get("id")}`))
+      .get(apiUrl(`/productDetail?id=${productId}`))
       .then((res) => {
         setProduct(res.data.prdData);
       })
       .catch(() => {
         alert("Failed to Fetch Data");
       });
-  }
+  }, [productId]);
 
   function RenderImages() {
     return product?.images?.map((item, index) => (
